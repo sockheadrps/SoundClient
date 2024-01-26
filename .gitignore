@@ -1,0 +1,33 @@
+# Dependency directories
+node_modules/
+
+# Build artifacts
+build/
+dist/
+.svelte-kit/
+
+# Editor-specific files
+.vscode/
+.idea/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Media files
+LocalClient/media/*
+
+# Local playlist
+playlist.json
+
+# env variables 
+.env
+
+# Python virtual environment
+.venv/
+
+# Postgres
+data/pgadmin-data/sessions/*
+data/pgadmin-data/storage/*
+pgadmin4.db
+
