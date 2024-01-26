@@ -9,6 +9,7 @@ GUI for configuration as well as interaction with the local client.
 <br>
 <br>
 <br>
+
 ### Dev Requirements:
 1. Svelte
 2. Tailwind
