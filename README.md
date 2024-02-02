@@ -1,7 +1,8 @@
 ![Gif](rdgif.gif)
+![gif](player.gif)
 
 ## Local Client:    
-A multi-channel audio control application with status and control HTTP directives.
+A multi-channel audio control application with status and control HTTP directives. 
 
 ## Web Client:
 GUI for configuration as well as interaction with the local client.
