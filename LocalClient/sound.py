@@ -57,7 +57,6 @@ class Sound:
                         pygame.mixer.music.unpause()
                         self.playing = True
                         break
-        print('play complete')
         self.stop()
 
     def pause(self):
