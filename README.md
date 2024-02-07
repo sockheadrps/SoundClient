@@ -1,4 +1,10 @@
+### Reordering playlist media
 ![Gif](rdgif.gif)
+
+### Adding new songs from media folder
+![gif](add.gif)
+
+### Web client
 ![gif](player.gif)
 
 ## Local Client:    

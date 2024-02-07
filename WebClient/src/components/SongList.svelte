@@ -8,10 +8,11 @@
 	let presentIndicies = [];
 	let persistCursor = undefined;
 	export let openSongList;
+
 	class Media {
 		constructor() {
 			this.url = 'http://127.0.0.1:8080/media';
-			this.mediaData = null; // Variable to store media data
+			this.mediaData = null;
 			this.cursorAt = 0;
 			this.fetchMediaData();
 			if (mediaList) {
@@ -19,7 +20,6 @@
 				this.cursorAt = persistCursor;
 			}
 		}
-
 		async fetchMediaData() {
 			try {
 				const response = await fetch(`${this.url}`);
@@ -28,10 +28,11 @@
 				}
 
 				this.mediaData = await response.json();
-				let media = this.mediaData.media['All Media'];
-				console.log('Media data fetched successfully:', this.mediaData);
+				let media = this.mediaData.media;
+				console.log('Media data fetched successfully:', this.mediaData.media);
 				this.mediaData = media;
 				mediaList = media;
+				console.log('Media data fetched successfully:', mediaList);
 				presentTracks = tracks.filter((itme1) =>
 					media.some((item2) => item2.title === itme1.title)
 				);
@@ -62,21 +63,25 @@
 
 			case 'ArrowUp':
 				if (media.cursorAt > 0) {
-					if (presentIndicies.includes(media.cursorAt - 1)) {
-						media.cursorAt -= 2;
-						break;
+					media.cursorAt--
+					while (presentIndicies.includes(media.cursorAt)) {
+						media.cursorAt--;
+						if (media.cursorAt === 0) {
+							media.cursorAt = mediaList.length - 1;
+						}
 					}
-					media.cursorAt--;
 				}
 				break;
 
 			case 'ArrowDown':
 				if (media.cursorAt < mediaList.length - 1) {
-					if (presentIndicies.includes(media.cursorAt + 1)) {
-						media.cursorAt += 2;
-						break;
+					media.cursorAt++
+					while (presentIndicies.includes(media.cursorAt)) {
+						media.cursorAt++
+						if( media.cursorAt === mediaList.length - 1) {
+							media.cursorAt = 0;
+						}
 					}
-					media.cursorAt++;
 				}
 				break;
 
