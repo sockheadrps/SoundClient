@@ -1,9 +1,11 @@
 <script>
+	import { PUBLIC_API } from '$env/static/public';
+
 	import { Button, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import { ChevronDownSolid } from 'flowbite-svelte-icons';
 	import { onMount } from 'svelte';
 	import SongList from '../../components/SongList.svelte';
-	let url = 'http://127.0.0.1:8080';
+	let url = `http://${PUBLIC_API}`;
 	let ready = false;
 	let keys;
 	let currentPlaylist;
