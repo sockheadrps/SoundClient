@@ -1,7 +1,4 @@
-### Reordering playlist media
-![Gif](rdgif.gif)
-
-### Adding new songs from media folder
+### Adding and Reordering playlist media
 ![gif](add.gif)
 
 ### Web client
