@@ -1,4 +1,6 @@
 <script>
+	import { PUBLIC_API } from '$env/static/public';
+
 	import { Button, Range, Dropdown, DropdownItem } from 'flowbite-svelte';
 	import {
 		ChevronDownSolid,
@@ -13,10 +15,10 @@
 	let isPlaying = false;
 	let isBreak = false;
 	let volume = 50;
-	let WsUrl = 'ws://127.0.0.1:8080/ws';
+	let WsUrl = `ws://${PUBLIC_API}/ws`;
 	let ready = false;
 	let playlists;
-	let url = 'http://127.0.0.1:8080';
+	let url = `http://${PUBLIC_API}`;
 	let currentPlaylist;
 	let startActive = false;
 	let playActive = false;

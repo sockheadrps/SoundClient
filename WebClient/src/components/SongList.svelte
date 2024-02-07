@@ -1,5 +1,7 @@
 <script>
 	import { onMount, onDestroy } from 'svelte';
+	import { PUBLIC_API } from '$env/static/public';
+
 	let ready = false;
 	let mediaList = undefined;
 	export let tracks = undefined;
@@ -11,7 +13,7 @@
 
 	class Media {
 		constructor() {
-			this.url = 'http://127.0.0.1:8080/media';
+			this.url = `http://${PUBLIC_API}/media`;
 			this.mediaData = null;
 			this.cursorAt = 0;
 			this.fetchMediaData();
