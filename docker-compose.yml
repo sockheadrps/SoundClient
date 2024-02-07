@@ -22,7 +22,6 @@ services:
     restart: always
     volumes:
       - ./data/pgadmin-data:/var/lib/pgadmin
-
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_USER}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
