@@ -1,7 +1,7 @@
 import json
 import os
 import eyed3
-from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, CHAR
+from sqlalchemy import create_engine, Column, String
 from sqlalchemy_utils import JSONType
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
