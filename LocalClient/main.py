@@ -1,6 +1,6 @@
-from fastapi import FastAPI, WebSocket, BackgroundTasks
+from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import JSONResponse
 from utils.playlist import Playlist
 from fastapi.encoders import jsonable_encoder
 import os
