@@ -1,109 +1,95 @@
 import pygame
 from time import sleep
-from threading import Thread
-import threading
-from utils.playlist import Song
-
+from threading import Thread,  Event, Lock
 
 song_list = None
 song_ended = False
 
 
 class Sound:
-    def __init__(self, playlist):
-        self.playing = False
+    def __init__(self, event_queue):
+        self.playing = None
         self.current_idx = 0
         self.playing_thread = None
         self.volume = 1.0
-        self.playlist = playlist
+        self.event_queue = event_queue
+        self.stop_event = Event()
+        self.pause_event = Event()
+        self.lock = Lock()
+        pygame.mixer.init()
+        self.load_paused = False
 
-    def play(self, volume=1.0):
-        self.stop()
+
+    def play(self, fp, volume=1.0, paused=False):
         self.volume = volume
         self.playing = True
-        self.playing_thread = Thread(target=self._play)
+        self.playing_thread = Thread(target=self._play, args=(fp, self.pause_event, paused))
         self.playing_thread.start()
+
         
 
-    def _play(self):
-        pygame.mixer.init()
-        song_list = self.playlist.song_list[self.playlist.title]
-        pygame.mixer.music.load(
-            song_list[self.current_idx]['file'])
+    def _play(self, fp, pause_event, paused):
+        if paused:
+            while True:
+                sleep(0.1)
+                if not pause_event.is_set():
+                    self.playing = True
+                    break
+
+        pygame.mixer.music.load(fp)
         pygame.mixer.music.set_volume(self.volume)
         pygame.mixer.music.play()
-        while pygame.mixer.music.get_busy():
+        
+        while not self.stop_event.is_set() and pygame.mixer.music.get_busy():
             sleep(0.1)
-        self.current_idx += 1
+            
+            if pause_event.is_set():
+                pygame.mixer.music.pause()
+                while True:
+                    sleep(0.1)
+                    if self.load_paused:
+                        # If the song is paused and the next button is pressed
+                        self.stop()
+                        self.load_paused = False
+                        return
+                    # is paused, and unpause is pressed
+                    if not pause_event.is_set():
+                        pygame.mixer.music.unpause()
+                        self.playing = True
+                        break
+        print('play complete')
         self.stop()
 
     def pause(self):
-        if self.playing:
-            pygame.mixer.music.pause()
-            self.playing = False
-        else:
-            pygame.mixer.music.unpause()
-            self.playing = True
+        with self.lock:
+            if self.playing:
+                self.playing = False
+                self.event_queue.put({"event": "pauseing"})
+                self.pause_event.set()
+            else:
+                self.event_queue.put({"event": "unpausing"})
+                self.pause_event.clear()
 
+    def resume(self):
+        # self.event_queue.put({"event": "resume"})
+        self.pause_event.clear()
+
+            
+                
     def stop(self):
-        if self.playing:
-            pygame.mixer.music.stop()
-            self.playing = False
-
-            # Check if there is a playing thread and it is not the current thread
-            if self.playing_thread and self.playing_thread != threading.current_thread():
-                self.playing_thread.join()
-                self.playing_thread = None
-                print("Thread joined")
-
-            # Commenting out the recursive call to self.play() to avoid recursion
-            self.play()
-
-            # Reset other attributes if needed
-            # self.sound = None
+        self.event_queue.put({"event": "song_end"})
+        self.stop_event.set()
+        pygame.mixer.music.stop()
+        self.stop_event.clear()
 
     def is_playing(self):
-        return self.playing
+        with self.lock:
+            return self.playing
 
     def set_volume(self, volume):
         self.volume = volume
         if self.playing:
+            self.event_queue.put({"event": "volume", "volume": volume})
             pygame.mixer.music.set_volume(self.volume)
+            
 
-    def get_volume(self):
-        return self.volume
-
-
-
-
-# sound = Sound()
-sound = None
-
-
-def sound_loop(event_queue):
-    while True:
-        sleep(0.01)
-        if not event_queue.empty():
-            data = event_queue.get()
-            # print(data)
-            match data['event']:
-                case "next":
-                    sound.play()
-                case "pause":
-                    sound.pause()
-                case "resume":
-                    sound.pause()
-                case "load":
-                    sound = Sound(data['playlist'])
-                case "volume":
-                    sound.set_volume(data['volume']/100)
-                case "prev":
-                    pass
-                case "current":
-                    current = {
-                        "playing": sound.is_playing(),
-                        "volume": sound.get_volume(),
-
-                    }
-                case "break":
-                    break

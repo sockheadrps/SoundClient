@@ -26,7 +26,6 @@ def get_mp3_info(file_path):
 
 class Song():
     def __init__(self, fp) -> None:
-        print(f"fp: {fp}")
         if os.path.isfile(fp) and fp.endswith(".mp3"):
             self.file_path = fp
             self.title, self.artist = get_mp3_info(fp)
@@ -88,13 +87,8 @@ class Playlist(Base):
             for song in self.playlist_data:
                 dict_songs.append(song)
 
-        data = {
-            self.title: dict_songs,
-        }
-        return data
+        return dict_songs
 
-    # def __repr__(self) -> str:
-    #     return f"Playlist: {self.playlist_name}, data: {self.data_to_dict()}"
 
     def validate_songs(self):
         validated_songs = []
@@ -137,7 +131,6 @@ if __name__ == "__main__":
 
     play_list = Playlist("My playlist", from_list=l)
     play_list.playlist_data = play_list.data_to_dict()
-    print(f"play_list: {play_list.playlist_data}")
 
     session.add(play_list)
     session.commit()
