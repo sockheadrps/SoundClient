@@ -20,8 +20,6 @@ import asyncio
 from contextlib import asynccontextmanager
 
 
-
-
 app = FastAPI()
 event_queue = Queue()
 notification_queue = Queue()
@@ -110,9 +108,12 @@ async def websocket_endpoint(websocket: WebSocket):
             data = json.loads(data)
             if data.get("event"):
                 print(f"Received event: {data['event']}")
-                
+
                 # Stick the event in the event queue for sound loop to handle
                 event_queue.put(data)
+                # # Send the event to all connected clients
+                # for w in websocket_clients:
+                #     await w.send_json(data)
 
                 # Kill server
                 if data['event'] == 'break':
@@ -140,24 +141,27 @@ async def sound_loop():
         await asyncio.sleep(0.01)
         if not event_queue.empty():
             data = event_queue.get()
-            print(f"WS Loading event: {data['event']}")   
+            print(f"WS Loading event: {data['event']}")
             match data['event']:
                 case "load":
                     # Load playlist data from DB, get files paths and create a new playlist
                     playlist = session.query(Playlist).filter(
                         Playlist.playlist_name == data.get('playlist')).first()
                     file_paths = [item['file']
-                                for item in playlist.playlist_data]
+                                  for item in playlist.playlist_data]
                     p_list = Playlist(from_list=file_paths,
-                                title=playlist.playlist_name)
+                                      title=playlist.playlist_name)
                     p_list.song_list = playlist.playlist_data
                     data['playlist'] = p_list
                     current_playlist = {"title": playlist.playlist_name,
                                         "song_list": p_list.song_list}
 
                 case "break":
-                     break
-                
+                    break
+
+                case _:
+                    pass
+
             if current_playlist is not None:
                 event = None
                 match data['event']:
@@ -165,22 +169,26 @@ async def sound_loop():
                         song = current_playlist
                         if sound.pause_event.is_set():
                             sound.stop()
-                            sound.play(song['song_list'][current_idx]['file'], paused=True)
-                            event = {"event": "load-paused", "song": song['song_list'][current_idx]}
+                            sound.play(song['song_list']
+                                       [current_idx]['file'], paused=True)
+                            event = {"event": "load-paused",
+                                     "song": song['song_list'][current_idx]}
                         else:
                             if sound.pause_event.is_set():
                                 sound.pause_event.clear()
                                 sound.stop()
                             sound.play(song['song_list'][current_idx]['file'])
-                            event = {"event": "playing", "song": song['song_list'][current_idx]}
+                            event = {"event": "playing",
+                                     "song": song['song_list'][current_idx]}
                         current_idx += 1
-                    
+
                     case "song_end":
                         if current_idx < len(song['song_list']) and not sound.pause_event.is_set():
                             sound.play(song['song_list'][current_idx]['file'])
-                            event = {"event": "playing", "song": song['song_list'][current_idx]}
+                            event = {"event": "playing",
+                                     "song": song['song_list'][current_idx]}
                             current_idx += 1
-                    
+
                     case "load-pause":
                         event = {"event": "paused"}
                         sound.load_paused = True
@@ -195,7 +203,8 @@ async def sound_loop():
                         sound.resume()
 
                     case "volume":
-                        event = {"event": "volume", "volume": data['volume']}
+                        print('setting volume')
+                        # event = {"event": "volume", "volume": data['volume']}
                         sound.set_volume(data['volume']/100)
 
                 if event is not None:
@@ -211,4 +220,3 @@ if __name__ == "__main__":
         print("Ctrl + C pressed. Exiting...")
     finally:
         print("Exiting...")
-

@@ -29,22 +29,18 @@
 	let paused = false;
 
 	function handlePauseClick() {
-			console.log('pause');
-			websocket.send(JSON.stringify({ event: 'pause' }));
+		websocket.send(JSON.stringify({ event: 'pause' }));
 		playActive = !playActive;
 	}
 	function handlePlayClick() {
 		websocket.send(JSON.stringify({ event: 'resume' }));
-		console.log('resume');
 		playActive = !playActive;
 	}
 
 	function handleStartClick() {
-		console.log('start click');
 		websocket.send(JSON.stringify({ event: 'next' }));
 		if (!paused) {
 			playActive = !playActive;
-			
 		}
 		startActive = !startActive;
 	}
@@ -57,6 +53,11 @@
 		}
 
 		isBreak = !isBreak;
+	}
+
+	function handleVolumeSlider() {
+		console.log(volume);
+		websocket.send(JSON.stringify({ event: 'volume', volume: volume }));
 	}
 
 	async function handleDropdownItemClick(key) {
@@ -221,7 +222,12 @@
 		</button>
 	</div>
 	<div class="mt-5 flex">
-		<input type="range" class="slider progress" bind:value={volume} />
+		<input
+			type="range"
+			class="slider progress"
+			on:change={handleVolumeSlider}
+			bind:value={volume}
+		/>
 	</div>
 	<div>
 		<div class="flex flex-row-reverse w-[80%] m-auto">

@@ -19,14 +19,12 @@ class Sound:
         pygame.mixer.init()
         self.load_paused = False
 
-
     def play(self, fp, volume=1.0, paused=False):
         self.volume = volume
         self.playing = True
-        self.playing_thread = Thread(target=self._play, args=(fp, self.pause_event, paused))
+        self.playing_thread = Thread(
+            target=self._play, args=(fp, self.pause_event, paused))
         self.playing_thread.start()
-
-        
 
     def _play(self, fp, pause_event, paused):
         if paused:
@@ -39,10 +37,10 @@ class Sound:
         pygame.mixer.music.load(fp)
         pygame.mixer.music.set_volume(self.volume)
         pygame.mixer.music.play()
-        
+
         while not self.stop_event.is_set() and pygame.mixer.music.get_busy():
             sleep(0.1)
-            
+
             if pause_event.is_set():
                 pygame.mixer.music.pause()
                 while True:
@@ -73,8 +71,6 @@ class Sound:
         # self.event_queue.put({"event": "resume"})
         self.pause_event.clear()
 
-            
-                
     def stop(self):
         self.event_queue.put({"event": "song_end"})
         self.stop_event.set()
@@ -88,7 +84,6 @@ class Sound:
     def set_volume(self, volume):
         self.volume = volume
         if self.playing:
-            self.event_queue.put({"event": "volume", "volume": volume})
+            # self.event_queue.put({"event": "volume", "volume": volume})
+            print(self.volume, "volume")
             pygame.mixer.music.set_volume(self.volume)
-            
-
