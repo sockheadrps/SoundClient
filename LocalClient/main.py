@@ -167,6 +167,7 @@ async def sound_loop():
                 match data['event']:
                     case "next":
                         song = current_playlist
+
                         if sound.pause_event.is_set():
                             sound.stop()
                             sound.play(song['song_list']
@@ -214,7 +215,7 @@ async def sound_loop():
 
 if __name__ == "__main__":
     try:
-        uvicorn.run(app, host="127.0.0.1", port=8080, lifespan="on")
+        uvicorn.run(app, host="0.0.0.0", port=8080, lifespan="on")
 
     except KeyboardInterrupt:
         print("Ctrl + C pressed. Exiting...")

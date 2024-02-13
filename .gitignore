@@ -26,6 +26,9 @@ playlist.json
 # Python virtual environment
 .venv/
 
+data
+.docker/volumes
+
 # Postgres
 data/pgadmin-data/sessions/*
 data/pgadmin-data/storage/*

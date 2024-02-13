@@ -1,7 +1,14 @@
+annotated-types==0.6.0
+anyio==4.2.0
+click==8.1.7
+coverage==5.5
+deprecation==2.1.0
 eyed3==0.9.7
 fastapi==0.109.2
 pygame==2.5.2
 python-dotenv==1.0.1
+setuptools==69.0.3
+sniffio==1.3.0
 SQLAlchemy==2.0.25
 SQLAlchemy_Utils==0.41.1
 uvicorn==0.27.0.post1
