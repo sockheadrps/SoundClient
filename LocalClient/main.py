@@ -18,16 +18,27 @@ import json
 from time import sleep
 import asyncio
 from contextlib import asynccontextmanager
+import dotenv
+
+dotenv.load_dotenv()
 
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins, you can specify domains instead
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+
 event_queue = Queue()
 notification_queue = Queue()
 current_playlist = None
 media_path = os.path.join(os.getcwd(), "media")
 
 origins = ["http://localhost", "http://localhost:8080",
-           "http://localhost:5173", "http://127.0.0.1", "http://192.168.1.124", "http://192.168.1.135", "http://192.168.1.135:8080", "http://192.168.1.135:5173",]
+           "http://localhost:5173", "http://192.168.1.124", os.environ.get("WEB_CLIENT"), os.environ.get("PUBLIC_API")]
 
 websocket_clients = []
 
