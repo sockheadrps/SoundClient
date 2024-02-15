@@ -1,5 +1,5 @@
 ## Remote media interaction over LAN
-Provides a management interface for audio and media of a remote device. This application provides Software convinience meant to mimic hardware devices such as the stream deck.
+Provides management tooling for audio and media control on a remote device. The interface provides a software solution meant to mimic hardware devices such as the stream deck, and can be extended to provide other custom functionality.
 
 ![pic](tab.jpg)
 
@@ -8,10 +8,10 @@ Provides a management interface for audio and media of a remote device. This app
 
 
 ## Local Client:    
-A multi-channel audio control application with status and control HTTP directives. 
+A multi-channel audio control server application with status and control HTTP directives. 
 
 ## Web Client:
-GUI for configuration as well as interaction with the local client.
+GUI for configuration as well as interaction with features exposed by the local client.
 
 <br>
 <br>
