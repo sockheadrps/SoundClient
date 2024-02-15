@@ -1,8 +1,11 @@
-### Adding and Reordering playlist media
-![gif](add.gif)
+## Remote media interaction over LAN
+Provides a management interface for audio and media of a remote device. This application provides Software convinience meant to mimic hardware devices such as the stream deck.
 
-### Web client
-![gif](player.gif)
+![pic](tab.jpg)
+
+### Adding and Reordering playlist media
+![gif](add.gif) ![gif](player.gif)
+
 
 ## Local Client:    
 A multi-channel audio control application with status and control HTTP directives. 
