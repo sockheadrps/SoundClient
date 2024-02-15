@@ -27,7 +27,7 @@ current_playlist = None
 media_path = os.path.join(os.getcwd(), "media")
 
 origins = ["http://localhost", "http://localhost:8080",
-           "http://localhost:5173", "http://127.0.0.1"]
+           "http://localhost:5173", "http://127.0.0.1", "http://192.168.1.124", "http://192.168.1.135", "http://192.168.1.135:8080", "http://192.168.1.135:5173",]
 
 websocket_clients = []
 
@@ -204,7 +204,6 @@ async def sound_loop():
                         sound.resume()
 
                     case "volume":
-                        print('setting volume')
                         # event = {"event": "volume", "volume": data['volume']}
                         sound.set_volume(data['volume']/100)
 

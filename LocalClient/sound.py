@@ -19,8 +19,7 @@ class Sound:
         pygame.mixer.init()
         self.load_paused = False
 
-    def play(self, fp, volume=1.0, paused=False):
-        self.volume = volume
+    def play(self, fp, paused=False):
         self.playing = True
         self.playing_thread = Thread(
             target=self._play, args=(fp, self.pause_event, paused))
